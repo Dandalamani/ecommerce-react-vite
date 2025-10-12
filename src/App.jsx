@@ -9,7 +9,7 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Account from "./pages/Account";
 import Orders from "./pages/Orders";
-import "./app.css";
+import "./App.css";
 import { CartProvider } from "./context/CartContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
