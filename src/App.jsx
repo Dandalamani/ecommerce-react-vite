@@ -13,6 +13,8 @@ import "./App.css";
 import { CartProvider } from "./context/CartContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -32,17 +34,21 @@ function App() {
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
           <Footer />
           <ToastContainer
-            position="bottom-right"
+            position="bottom-center"
             autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
+            hideProgressBar
             closeOnClick
-            pauseOnHover
-            draggable
+            pauseOnHover={false}
+            draggable={false}
+            newestOnTop
+            toastClassName="meesho-toast"
+            bodyClassName="meesho-toast-body"
             theme="colored"
           />
         </div>

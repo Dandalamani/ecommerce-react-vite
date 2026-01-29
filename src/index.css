@@ -1,3 +1,8 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -20,8 +25,7 @@ a:hover {
 }
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding-top: 89px;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -57,5 +61,490 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* 🔔 Meesho-style toast */
+.meesho-toast {
+  background: #2f2f2f !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  min-height: unset !important;
+  padding: 10px 14px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+}
+
+.meesho-toast-body {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 !important;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .meesho-toast {
+    width: auto;
+    max-width: 90%;
+    font-size: 13px;
+  }
+  /* ✅ Mobile-only toast position adjustment */
+  .Toastify__toast-container--bottom-center {
+    bottom: 80px !important;   /* 👈 move toast upward */
+  }
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+/* Left section: image + text */
+.cart-item-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 1;
+}
+
+.cart-item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.cart-item-info h4 {
+  font-size: 0.85rem;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.cart-item-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* Right section: actions */
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-item-actions button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.cart-remove {
+  background: #ff4d4d;
+  color: white;
+  font-size: 0.75rem;
+}
+.cancel-toast {
+  text-align: center;
+  background: #faf8f8 !important;
+  color: #fff !important;
+  padding: 9px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  width: auto;
+  max-width: 420px;
+  border-radius: 10px;
+}
+/* ================= CANCEL ORDER TOAST ================= */
+/* Special container ONLY for cancel toast */
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
+/* Desktop: make it larger */
+@media (min-width: 769px) {
+  .cancel-toast-container {
+  position: fixed !important;
+  top: 10px !important;        /* 👈 ABOVE navbar */
+  transform: translateX(-50%) !important;
+  left: 50% !important;
+  inset: 0 !important;                 /* full viewport */
+  display: flex !important;
+  align-items: center !important;      /* vertical center */
+  justify-content: center !important;  /* horizontal center */
+  pointer-events: none;                /* block background interaction */
+  z-index: 20000 !important;  /* above navbar (10000) */
+}
+  .cancel-toast {
+    max-width: 320px !important;
+    width: 420px;
+    font-size: 16px;
+    padding: 12px 14px !important;
+  }
+  .Toastify__toast-container--top-center {
+    top: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  .wishlist-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 🔥 4 per row */
+    gap: 40px;
+    column-gap: 30px;
+    row-gap: 20px;
+    max-width: 1200px;
+    margin: 2rem auto; /* center the grid */
+    padding: 10px 70px;
+    box-sizing: border-box;
+  }
+  .wishlist-card {
+    display: flex;
+    flex-direction: column;
+    height: 290px;
+    width: 220px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .wishlist-card-content {
+    flex: 1; /* pushes buttons to bottom */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wishlist-image {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  .wishlist-title {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    text-align: center;
+    /* limit title height to keep consistency */
+    line-height: 1.3;
+    min-height: 38px;
+    height: 40px; /* fixed height */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;        /* max 2 lines */
+    -webkit-box-orient: vertical;
+  }
+  .wishlist-price {
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-top: 0%;
+  }
+  .wishlist-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto; /* 🔥 key line */
+  }
+  .wishlist-move-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .wishlist-remove-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 4px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .wishlist-card-buttons {
+    margin-top: auto; /* 🔥 buttons stick to bottom */
+  }
+}
+
+/* Mobile: keep as-is */
+@media (max-width: 768px) {
+  .Toastify__toast-container--top-center {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100%;
+    padding: 0 12px;
+  }
+  .cancel-toast-container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex !important;
+    align-items: center !important;      /* vertical center */
+    justify-content: center !important;  /* horizontal center */
+    width: auto !important;
+    pointer-events: auto;
+    z-index: 9999;
+  }
+  .cancel-toast {
+    width: 90vw;
+    max-width: 360px;
+    font-size: 14px;
+    padding: 14px;
+  }
+  .Toastify__toast {
+    margin-bottom: 10px !important; /* 👈 spacing between messages */
+  }
+  .wishlist-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr); /* 🔥 2 per row */
+    column-gap: 36px;   /* 👈 space between left & right */
+    row-gap: 14px;
+    padding: 10 12px;   
+    box-sizing: border-box;
+    margin-right: 20px; /* prevent horizontal scroll */
+  }
+  .wishlist-card {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto; /* center cards */
+    height: auto;
+    width: 100%;   /* grid controls width */
+    max-width: 165px; 
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .wishlist-card-content {
+    flex: 1; /* pushes buttons to bottom */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wishlist-image {
+    height: 110px;
+    width: 100%;
+    object-fit: contain;
+    margin-bottom: 4px;
+  }
+  .wishlist-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 0.6px !important;
+    text-align: center;
+    /* limit title height to keep consistency */
+    line-height: 1.3;
+    height: 36px;
+    height: 40px; /* fixed height */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;        /* 🔑 max 2 lines */
+    -webkit-box-orient: vertical;
+  }
+  .wishlist-price {
+    margin: 6px 0 8px;
+    font-weight: bold;
+  }
+  .wishlist-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto; /* 🔥 key line */
+  }
+  .wishlist-move-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    flex:1;
+    padding: 4px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    min-width: 21px;
+    min-height: 23px;
+  }
+  .wishlist-remove-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    min-width: 21px;
+    min-height: 23px;
+  }
+  .wishlist-card-buttons {
+    margin-top: auto; /* 🔥 buttons stick to bottom */
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .cancel-overlay {
+    position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30000;
+  }
+  .cancel-modal {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 300px;
+  text-align: center;
+}
+.cancel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;              /* ✅ THIS creates space */
+  margin-top: 14px;
+}
+
+.cancel-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.cancel-actions .yes {
+  background: #d30808;
+  color: #fff;
+}
+
+.cancel-actions .no {
+  background: #444;
+  color: #fff;
+}
+  .cart-item {
+    flex-direction: column;          /* 🔥 stack vertically */
+    align-items: flex-start;
+  }
+  .cart-item-actions {
+    justify-content: space-between;  /* qty left, remove right */
+    margin-top: 8px;
+    gap: 4px;
+  }
+  .cart-item-actions button {
+    background-color: #e6e6e6 !important; /* light grey */
+    color: #000 !important;               /* black symbols */
+    font-weight: 700;
+  }
+  .cart-item-actions .cart-remove {
+    background-color: #ff4d4d !important;
+    color: #fff !important;
+  }
+  .cart-remove {
+    padding: 6px 10px;
+    margin-left: 20px;
+    font-size: 0.9rem;
+  }
+  input {
+    box-sizing: border-box;           /* ✅ prevents overflow */
+    padding: 10px 12px;               /* ✅ better spacing */
+    font-size: 14px;
+  }
+
+  /* Placeholder visibility */
+  input::placeholder {
+    color: #020000;                      /* ✅ darker placeholder */
+    opacity: 1;                       /* Safari fix */
+  }
+  form input {
+    width: 100%;
+    background: #f2f2f2;              /* ✅ lighter background */
+    color: #e4d9d9;
+  }
+
+  /* MM/YY + CVV row fix */
+  form div input {
+    min-width: 0;                     /* ✅ prevents overflow */
+  }
+  input[placeholder*="coupon"] {
+    background-color: #ffffff !important; /* ✅ white box */
+    color: #000000 !important;             /* ✅ black text */
+    border: 1px solid #ccc;
+  }
+
+  input[placeholder*="coupon"]::placeholder {
+    color: #666666;                        /* ✅ readable placeholder */
+    opacity: 1;
+  }
+  input {
+    color: #000000 !important;        /* ✅ typed text black */
+    caret-color: #000000;             /* ✅ cursor black */
+    background-color: #ffffff;        /* keep white */
+  }
+
+  input::placeholder {
+    color: #666666;                   /* readable placeholder */
+    opacity: 1;
+  }
+}
+@media (max-width: 768px) {
+  body {
+    padding-top: 100px; /* ✅ mobile navbar height */
+  }
+}
+/* ===== DESKTOP CANCEL MODAL ===== */
+@media (min-width: 769px) {
+  .cancel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding-top: 10px;   /* 👈 ABOVE navbar */
+    z-index: 30000;      /* 👈 ABOVE navbar (10000) */
+  }
+
+  .cancel-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+
+  .cancel-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .cancel-actions .yes {
+    background: #f00a21;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .cancel-actions .no {
+    background: #ccc;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
   }
 }

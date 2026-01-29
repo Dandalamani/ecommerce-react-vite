@@ -1,11 +1,14 @@
 import React from "react";
+import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
 import { toast } from "react-toastify";
 
 function ProductCard({ product, addToCart }) {
   const { wishlist, dispatchWishlist } = useWishlist();
+  const { cart } = useCart(); // 👈 cart state
   const isInWishlist = wishlist.some((item) => item.id === product.id);
+  const isInCart = cart.some((item) => item.id === product.id); // 👈 check cart
 
   const toggleWishlist = () => {
     if (isInWishlist) {
@@ -18,77 +21,55 @@ function ProductCard({ product, addToCart }) {
   };
 
   const handleAddToCart = () => {
+    if (isInCart) return; // 🔕 prevent duplicate + toast
     addToCart(product);
-    toast.success(`Added "${product.title}" to cart 🛒`);
+    toast("✔ Product added to cart");
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        padding: "10px",
-        margin: "10px",
-        width: "220px",
-        textAlign: "center",
-        background: "white",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        transition: "transform 0.2s ease",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-    >
+    <div className="product-card">
+      {/* IMAGE + TITLE */}
       <Link
         to={`/products/${product.id}`}
-        style={{ textDecoration: "none", color: "inherit" }}
+        className="product-link"
       >
         <img
           src={product.image}
           alt={product.title}
-          style={{
-            height: "150px",
-            width: "100%",
-            objectFit: "contain",
-            marginBottom: "10px",
-          }}
+          className="product-image"
         />
-        <h3
-          style={{
-            fontSize: "1rem",
-            height: "40px",
-            overflow: "hidden",
-          }}
-        >
+
+        <h3 className="product-title">
           {product.title}
         </h3>
       </Link>
-      <p style={{ fontWeight: "bold" }}>₹{product.price}</p>
-      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+
+      {/* PRICE */}
+      <p className="product-price">₹{product.price}</p>
+
+      {/* ACTION BUTTONS */}
+      <div className="product-actions">
+        <div className="tooltip-wrapper">
         <button
           onClick={handleAddToCart}
+          className="btn-cart"
+          disabled={isInCart}
           style={{
-            padding: "6px 12px",
-            background: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
+            cursor: isInCart ? "not-allowed" : "pointer",
+            opacity: isInCart ? 0.7
+             : 1,
           }}
         >
-          Add to Cart
+          {isInCart ? "In Cart" : "Add to Cart"}
         </button>
+        {/* 🔔 Tooltip */}
+        {isInCart && <span className="tooltip-text">Already in cart</span>}
+      </div>
         <button
           onClick={toggleWishlist}
-          style={{
-            padding: "6px 12px",
-            background: isInWishlist ? "#ff4d4d" : "#ff85a2",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
+          className={`btn-wishlist ${isInWishlist ? "remove" : ""}`}
         >
-          {isInWishlist ? "💔 Remove" : "❤️ Wishlist"}
+          {isInWishlist ? "Remove" : "Wishlist"}
         </button>
       </div>
     </div>

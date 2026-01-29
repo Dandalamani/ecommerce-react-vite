@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
 /**
  * Updated Cart page with:
  * - Subtotal, discounts, coupon, shipping, tax
@@ -70,10 +71,12 @@ function Cart() {
     if (paymentMethod === "card") {
       const { name, number, expiry, cvv } = cardForm;
       if (!name || !number || !expiry || !cvv) {
-        return alert("Please fill all card details (fake payment)");
+        toast.error("Please fill all card details");
+        return;
       }
       if (!/^\d{12,19}$/.test(number.replace(/\s+/g, ""))) {
-        return alert("Enter a fake valid card number (12-19 digits).");
+        toast.error("Enter a valid card number (12–19 digits)");
+        return;
       }
     }
     // Build order object
@@ -112,7 +115,7 @@ function Cart() {
       setAppliedCoupon(null);
       setCoupon("");
       setCardForm({ name: "", number: "", expiry: "", cvv: "" });
-      alert("Payment successful! Order placed.");
+      toast.success("Payment successful! Order placed 🎉");
     }, 1500); // 1.5s simulated processing
   };
   return (
@@ -128,37 +131,37 @@ function Cart() {
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "8px",
-                    padding: "10px",
-                    margin: "10px 0",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    background: "white",
-                  }}
+                  className="cart-item"
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <img src={item.image} alt={item.title} style={{ width: "60px", height: "60px", objectFit: "contain" }} />
-                    <div style={{ maxWidth: "420px" }}>
-                      <h4 style={{ margin: 0, fontSize: "1rem" }}>{item.title}</h4>
-                      <p style={{ margin: 0, color: "#555" }}>₹{item.price.toFixed(2)}</p>
+                  <div className="cart-item-left">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="cart-item-image"
+                    />
+                    <div className="cart-item-info">
+                      <h4>{item.title}</h4>
+                      <p>₹{item.price.toFixed(2)}</p>
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <button onClick={() => decreaseQty(item)} style={qtyButtonStyle}>−</button>
+                  <div className="cart-item-actions">
+                    <button onClick={() => decreaseQty(item)}>−</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => increaseQty(item)} style={qtyButtonStyle}>+</button>
-                    <button onClick={() => removeFromCart(item)} style={removeButtonStyle}>Remove</button>
+                    <button onClick={() => increaseQty(item)}>+</button>
+                    <button
+                      className="cart-remove"
+                      onClick={() => removeFromCart(item)}
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
             {/* RIGHT: Order summary + payment */}
             <aside style={{ width: "360px", minWidth: "280px" }}>
-              <div style={{ padding: "1rem", borderRadius: "8px", background: "white", boxShadow: "0 4px 10px rgba(0,0,0,0.05)" }}>
+              <div style={{ padding: "1rem", borderRadius: "8px", background: "white", boxShadow: "0 4px 10px rgba(87, 56, 56, 0.05)" }}>
                 <h3>Order Summary</h3>
                 <div style={summaryRowStyle}><span>Subtotal</span><strong>{fmt(subtotal)}</strong></div>
                 <div style={summaryRowStyle}><span>Volume Discount</span><span>- {fmt(volumeDiscount)}</span></div>
@@ -168,7 +171,7 @@ function Cart() {
                 <hr />
                 <div style={summaryRowStyle}><span style={{ fontSize: "1.1rem" }}>Total</span><strong style={{ fontSize: "1.1rem" }}>{fmt(total)}</strong></div>
                 {/* Coupon input */}
-                <div style={{ marginTop: "1rem", display: "flex", gap: "8px" }}>
+                <div style={{ marginTop: "1rem", display: "flex", gap: "9px" }}>
                   <input
                     placeholder="Enter coupon (e.g. SAVE50)"
                     value={coupon}
@@ -199,10 +202,10 @@ function Cart() {
                 </div>
                 {/* Fake payment UI */}
                 {paymentMethod === "card" && (
-                  <form onSubmit={placeOrder} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <form onSubmit={placeOrder} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "9px" }}>
                     <input name="name" value={cardForm.name} onChange={handleCardChange} placeholder="Name on card" style={inputSmallStyle} />
                     <input name="number" value={cardForm.number} onChange={handleCardChange} placeholder="Card number (digits only)" style={inputSmallStyle} />
-                    <div style={{ display: "flex", gap: "8px" }}>
+                    <div style={{ display: "flex", gap: "9px" }}>
                       <input name="expiry" value={cardForm.expiry} onChange={handleCardChange} placeholder="MM/YY" style={{ ...inputSmallStyle, flex: 1 }} />
                       <input name="cvv" value={cardForm.cvv} onChange={handleCardChange} placeholder="CVV" style={{ ...inputSmallStyle, width: "100px" }} />
                     </div>
@@ -228,15 +231,15 @@ function Cart() {
                   </div>
                 )}
                 <div style={{ marginTop: "1rem", display: "flex", gap: "8px" }}>
-                  <button onClick={() => dispatch({ type: "CLEAR_CART" })} style={{ flex: 1, padding: "8px", borderRadius: "6px", background: "#ddd", border: "none" }}>
+                  <button onClick={() => dispatch({ type: "CLEAR_CART" })} style={{ flex: 1, padding: "8px", borderRadius: "6px", background: "#e41515", color: "white", border: "none" }}>
                     Clear Cart
                   </button>
                   <button onClick={() => {
                     // Quick: save cart as draft order locally (not required)
                     const draft = { id: "DRAFT" + Date.now(), items: cart, subtotal, savedAt: new Date().toISOString() };
                     localStorage.setItem("draftOrder", JSON.stringify(draft));
-                    alert("Draft saved locally.");
-                  }} style={{ padding: "8px", borderRadius: "6px", background: "#f0f0f0", border: "1px solid #ccc" }}>
+                    toast.success("Draft saved locally.");
+                  }} style={{ padding: "8px", color: "white", borderRadius: "6px", background: "#1a4bed", border: "1px solid #ccc" }}>
                     Save Draft
                   </button>
                 </div>
@@ -269,10 +272,12 @@ function Cart() {
 /* Styles */
 const qtyButtonStyle = {
   background: "#eee",
+  color: "#000",
   border: "none",
   padding: "6px 10px",
   borderRadius: "6px",
   cursor: "pointer",
+  fontWeight: "bold",
 };
 const removeButtonStyle = {
   backgroundColor: "#ff4d4d",

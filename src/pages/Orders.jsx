@@ -1,32 +1,42 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+const lockScroll = () => {
+  document.body.style.overflow = "hidden";
+};
+
+const unlockScroll = () => {
+  document.body.style.overflow = "";
+};
+
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [cancelOrderId, setCancelOrderId] = useState(null);
+
   useEffect(() => {
     const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
     setOrders(savedOrders);
+
+    return () => {
+      unlockScroll();
+    };
   }, []);
+
   const fmt = (v) => `₹${v.toFixed(2)}`;
-  // ✅ Cancel order handler
-  const handleCancelOrder = (id) => {
-    if (!window.confirm("Are you sure you want to cancel this order?")) return;
-    const updatedOrders = orders.map((order) =>
-      order.id === id ? { ...order, status: "cancelled" } : order
-    );
-    setOrders(updatedOrders);
-    localStorage.setItem("orders", JSON.stringify(updatedOrders));
-    alert("❌ Order cancelled successfully!");
-  };
+
   return (
     <div
       style={{
         padding: "2rem",
         minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
         background: "#f9fafc",
         color: "#333",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>📦 My Orders</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        📦 My Orders
+      </h2>
+
       {orders.length === 0 ? (
         <p style={{ textAlign: "center", marginTop: "3rem", color: "#555" }}>
           You haven’t placed any orders yet.
@@ -52,22 +62,25 @@ function Orders() {
                 }}
               >
                 <div>
-                  <h3 style={{ margin: "0 0 0.4rem" }}>Order ID: {order.id}</h3>
+                  <h3 style={{ margin: "0 0 0.4rem" }}>
+                    Order ID: {order.id}
+                  </h3>
                   <p style={{ margin: 0, color: "#777" }}>
                     Placed on: {new Date(order.date).toLocaleString()}
                   </p>
                 </div>
+
                 <div style={{ textAlign: "right" }}>
                   <p
                     style={{
                       margin: 0,
+                      fontWeight: "bold",
                       color:
                         order.status === "paid"
                           ? "green"
                           : order.status === "cancelled"
                           ? "red"
                           : "orange",
-                      fontWeight: "bold",
                     }}
                   >
                     {order.status === "paid"
@@ -81,7 +94,9 @@ function Orders() {
                   </p>
                 </div>
               </div>
+
               <hr style={{ margin: "1rem 0", borderColor: "#eee" }} />
+
               <p style={{ margin: 0 }}>
                 Payment Method:{" "}
                 <strong style={{ textTransform: "uppercase" }}>
@@ -95,7 +110,6 @@ function Orders() {
                     cursor: "pointer",
                     color: "#007bff",
                     fontWeight: "bold",
-                    userSelect: "none",
                   }}
                 >
                   View Items ({order.items.length})
@@ -109,10 +123,13 @@ function Orders() {
                   ))}
                 </ul>
               </details>
-              {/* ✅ Cancel button (only if not cancelled) */}
+
               {order.status !== "cancelled" && (
                 <button
-                  onClick={() => handleCancelOrder(order.id)}
+                  onClick={() => {
+                    lockScroll();
+                    setCancelOrderId(order.id);
+                  }}
                   style={{
                     marginTop: "1rem",
                     background: "red",
@@ -130,7 +147,55 @@ function Orders() {
           ))}
         </div>
       )}
+
+      {/* ================= CANCEL CONFIRM MODAL ================= */}
+      {cancelOrderId && (
+        <div className="cancel-overlay">
+          <div className="cancel-modal">
+            <strong>Are you sure you want to cancel this order?</strong>
+
+            <div className="cancel-actions">
+              <button
+                className="yes"
+                onClick={() => {
+                  const updatedOrders = orders.map((o) =>
+                    o.id === cancelOrderId
+                      ? { ...o, status: "cancelled" }
+                      : o
+                  );
+
+                  setOrders(updatedOrders);
+                  localStorage.setItem(
+                    "orders",
+                    JSON.stringify(updatedOrders)
+                  );
+
+                  setCancelOrderId(null);
+                  unlockScroll();
+
+                  toast.success("Order cancelled successfully", {
+                    position: "bottom-center",
+                  });
+                }}
+              >
+                Yes, Cancel
+              </button>
+
+              <button
+                className="no"
+                onClick={() => {
+                  setCancelOrderId(null);
+                  unlockScroll();
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 export default Orders;

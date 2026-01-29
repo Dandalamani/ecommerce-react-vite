@@ -5,7 +5,7 @@ function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { dispatch } = useCart(); // ✅ dispatch
+  const { cart, dispatch } = useCart(); // ✅ get cart + dispatch
   useEffect(() => {
     fetch(`https://fakestoreapi.com/products/${id}`)
       .then((res) => res.json())
@@ -13,11 +13,13 @@ function ProductDetails() {
         setProduct(data);
         setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {console.error(err);
+      setLoading(false);});
   }, [id]);
+  const isInCart = cart.some((item) => item.id === product?.id);
   const addToCart = () => {
-    dispatch({ type: "ADD_TO_CART", payload: { ...product, quantity: 1 } }); // ✅ add or increase qty
-    alert(`Added "${product.title}" to cart!`);
+    if (isInCart) return; // 🔒 prevent duplicate add
+    dispatch({ type: "ADD_TO_CART", payload: { ...product, quantity: 1 },}); // ✅ add or increase qty
   };
   if (loading) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Loading...</p>;
   if (!product) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Product not found!</p>;
@@ -29,9 +31,14 @@ function ProductDetails() {
         <p style={{ color: "#555" }}>{product.description}</p>
         <h3 style={{ color: "#007bff" }}>₹{product.price}</h3>
         <p><strong>Category:</strong> {product.category}</p>
-        <button onClick={addToCart} style={{ marginTop: "1rem", padding: "10px 20px", background: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
-          Add to Cart
+        <button onClick={addToCart} style={{ marginTop: "1rem", padding: "10px 20px", background: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: isInCart ? "not-allowed" : "pointer", }}>
+          {isInCart ? "In Cart" : "Add to Cart"}
         </button>
+        {isInCart && (
+          <p style={{ color: "#28a745", marginTop: "8px" }}>
+            ✔ Already added to cart
+          </p>
+        )}
         <div style={{ marginTop: "1rem" }}>
           <Link to="/products" style={{ color: "#007bff" }}>← Back to Products</Link>
         </div>

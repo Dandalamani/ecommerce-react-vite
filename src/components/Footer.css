@@ -1,0 +1,19 @@
+.footer {
+  width: 100%;
+  background: #eee;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #333;
+
+  /* ✅ THIS FIXES THE OVERLAP */
+  margin-top: 40px;
+}
+
+/* Mobile-safe spacing */
+@media (max-width: 768px) {
+  .footer {
+    padding: 16px 10px;
+    font-size: 13px;
+  }
+}
