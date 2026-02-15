@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import "../styles/auth.css";
+import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import "../styles/auth.css";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ connect to AuthContext
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,22 +23,25 @@ function Login() {
     try {
       const res = await loginUser(form);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ store full data (token + user)
+      login(res); 
 
       toast.success("Login successful ✅");
-      window.location.href = "/";
+
+      navigate("/"); // no reload
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      toast.error(
+        err.response?.data?.message || "Login failed"
+      );
     } finally {
       setLoading(false);
     }
-  };
+   };
 
   return (
     <div className="auth-container">
       <form className="auth-box" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+        <h2>Welcome Back 👋</h2>
 
         <input
           type="email"
@@ -56,7 +64,7 @@ function Login() {
         </button>
 
         <p>
-          New user? <a href="/register">Create account</a>
+          New user? <Link to="/register">Create account</Link>
         </p>
       </form>
     </div>

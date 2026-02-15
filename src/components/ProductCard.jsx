@@ -3,14 +3,17 @@ import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 function ProductCard({ product, addToCart }) {
   const { wishlist, dispatchWishlist } = useWishlist();
   const { cart } = useCart(); // 👈 cart state
   const isInWishlist = wishlist.some((item) => item.id === product.id);
   const isInCart = cart.some((item) => item.id === product.id); // 👈 check cart
+  const { requireAuth } = useAuth();
 
   const toggleWishlist = () => {
+    if (!requireAuth("use wishlist")) return;
     if (isInWishlist) {
       dispatchWishlist({ type: "REMOVE_FROM_WISHLIST", payload: product });
       toast.info(`Removed "${product.title}" from wishlist ❤️`);
@@ -21,6 +24,7 @@ function ProductCard({ product, addToCart }) {
   };
 
   const handleAddToCart = () => {
+    if (!requireAuth("add items to cart")) return;
     if (isInCart) return; // 🔕 prevent duplicate + toast
     addToCart(product);
     toast("✔ Product added to cart");
@@ -34,7 +38,7 @@ function ProductCard({ product, addToCart }) {
         className="product-link"
       >
         <img
-          src={product.image}
+          src={product.image || product.thumbnail}
           alt={product.title}
           className="product-image"
         />

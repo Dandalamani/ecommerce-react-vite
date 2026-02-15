@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 const WishlistContext = createContext();
+
 function wishlistReducer(state, action) {
   switch (action.type) {
     case "ADD_TO_WISHLIST":
@@ -14,6 +15,7 @@ function wishlistReducer(state, action) {
       return state;
   }
 }
+
 // Get initial wishlist from localStorage
 const getInitialWishlist = () => {
   const savedWishlist = localStorage.getItem("wishlist");

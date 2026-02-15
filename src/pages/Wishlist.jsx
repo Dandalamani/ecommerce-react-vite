@@ -2,13 +2,16 @@ import React from "react";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 function Wishlist() {
   const { wishlist, dispatchWishlist } = useWishlist();
   const { dispatch } = useCart();
+  const { requireAuth } = useAuth();
   const removeFromWishlist = (item) => {
     dispatchWishlist({ type: "REMOVE_FROM_WISHLIST", payload: item });
   };
   const moveToCart = (item) => {
+    if (!requireAuth("move items to cart")) return;
     // 1️⃣ Add to cart
     dispatch({ type: "ADD_TO_CART", payload: { ...item, quantity: 1 } });
     // 2️⃣ Remove from wishlist

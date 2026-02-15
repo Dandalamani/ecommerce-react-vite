@@ -1,39 +1,64 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { dispatch } = useCart();
-
+  const location = useLocation();
+  const API = import.meta.env.VITE_API_URL;
   const addToCart = (product) => {
     dispatch({ type: "ADD_TO_CART", payload: product });
   };
+  const queryParams = new URLSearchParams(location.search);
+  const searchQuery = queryParams.get("search") || "";
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.log(err));
-  }, []);
+  useEffect(() => { setLoading(true);
+    axios.get(`${API}/api/products?search=${searchQuery}`)
+    .then(res => {
+      console.log("DATA:", res.data); // 👈 check here
+      setProducts(res.data || []);
+    })
+    .catch((err) => {
+        console.error("ERROR:", err);
+        setProducts([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [searchQuery, API]); // ✅ correct dependency
 
   return (
     <div style={{ padding: "1rem" }}>
       <h2 style={{ textAlign: "center" }}>🛍️ Products</h2>
-      <p style={{ textAlign: "center" }}>
-        Browse our list of available products below.
-      </p>
+      {searchQuery && (
+        <p style={{ textAlign: "center", marginBottom: "10px" }}>
+          Showing results for "<strong>{searchQuery}</strong>"
+        </p>
+      )}
+      {loading ? (
+        <p style={{ textAlign: "center" }}>Loading products...</p>
+      ) : (
 
-      {/* ✅ GRID LAYOUT */}
       <div className="product-grid">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            addToCart={addToCart}
-          />
-        ))}
+        {products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              addToCart={addToCart}
+            />
+          ))
+        ) : (
+          <p style={{ textAlign: "center", width: "100%" }}>
+            ❌ No products found
+          </p>
+        )}
       </div>
+      )}
 
       {/* ✅ RESPONSIVE GRID CSS */}
       <style>

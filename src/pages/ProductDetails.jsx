@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { cart, dispatch } = useCart(); // ✅ get cart + dispatch
+  const { requireAuth } = useAuth();
   useEffect(() => {
     fetch(`https://fakestoreapi.com/products/${id}`)
       .then((res) => res.json())
@@ -16,8 +18,10 @@ function ProductDetails() {
       .catch((err) => {console.error(err);
       setLoading(false);});
   }, [id]);
+
   const isInCart = cart.some((item) => item.id === product?.id);
   const addToCart = () => {
+    if (!requireAuth("add items to cart")) return;
     if (isInCart) return; // 🔒 prevent duplicate add
     dispatch({ type: "ADD_TO_CART", payload: { ...product, quantity: 1 },}); // ✅ add or increase qty
   };

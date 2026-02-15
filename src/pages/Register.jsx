@@ -2,6 +2,7 @@ import { useState } from "react";
 import { registerUser } from "../services/authService";
 import "../styles/auth.css";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ function Register() {
     email: "",
     password: ""
   });
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +25,7 @@ function Register() {
     try {
       await registerUser(form);
       toast.success("Registration successful 🎉");
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     } finally {

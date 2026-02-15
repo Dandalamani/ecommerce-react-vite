@@ -1,55 +1,120 @@
+/* ===== AUTH PAGE WRAPPER ===== */
 .auth-container {
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #f2f4f8;
+  align-items: center;
+  background: linear-gradient(135deg, #1d3863, #2874f0);
   padding: 20px;
+  box-sizing: border-box;
 }
 
+/* ===== AUTH BOX ===== */
 .auth-box {
   background: white;
-  padding: 30px;
+  padding: 35px 30px;
   width: 100%;
-  max-width: 360px;
-  border-radius: 10px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
+/* ===== TITLE ===== */
 .auth-box h2 {
   text-align: center;
+  margin-bottom: 10px;
+  color: #1d3863;
+  font-size: 24px;
 }
 
+/* ===== INPUT FIELDS ===== */
 .auth-box input {
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
   font-size: 14px;
+  transition: all 0.2s ease;
+  outline: none;
 }
 
+.auth-box input:focus {
+  border-color: #2874f0;
+  box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.2);
+}
+
+/* ===== BUTTON ===== */
 .auth-box button {
-  background: #007bff;
-  color: white;
   padding: 12px;
-  border-radius: 6px;
+  background: #2874f0;
+  color: white;
+  font-size: 15px;
   border: none;
-  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.auth-box button:hover {
+  background: #1d3863;
 }
 
 .auth-box button:disabled {
-  opacity: 0.7;
+  background: #9dbcf7;
+  cursor: not-allowed;
 }
 
+/* ===== FOOTER TEXT ===== */
 .auth-box p {
   text-align: center;
   font-size: 14px;
 }
 
 .auth-box a {
-  color: #007bff;
+  color: #2874f0;
   text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-box a:hover {
+  text-decoration: underline;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 25px;
+    min-height: 80vh;
+  }
+  .auth-box {
+    padding: 25px 20px;
+  }
+
+  .auth-box h2 {
+    font-size: 20px;
+  }
+
+  .auth-box input {
+    font-size: 13px;
+  }
+
+  .auth-box button {
+    font-size: 14px;
+  }
 }

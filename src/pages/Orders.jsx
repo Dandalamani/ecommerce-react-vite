@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const lockScroll = () => {
   document.body.style.overflow = "hidden";
@@ -11,10 +13,15 @@ const unlockScroll = () => {
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const { user, isAuthenticated } = useAuth();
+
+if (!isAuthenticated) {
+  return <Navigate to="/login" />;
+}
   const [cancelOrderId, setCancelOrderId] = useState(null);
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+    const savedOrders = JSON.parse(localStorage.getItem(`orders_${user.user.id}`) || "[]");
     setOrders(savedOrders);
 
     return () => {
@@ -166,9 +173,9 @@ function Orders() {
 
                   setOrders(updatedOrders);
                   localStorage.setItem(
-                    "orders",
-                    JSON.stringify(updatedOrders)
-                  );
+  `orders_${user.user.id}`,
+  JSON.stringify(updatedOrders)
+);
 
                   setCancelOrderId(null);
                   unlockScroll();

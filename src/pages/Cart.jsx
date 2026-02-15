@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 /**
  * Updated Cart page with:
  * - Subtotal, discounts, coupon, shipping, tax
@@ -8,6 +9,7 @@ import { toast } from "react-toastify";
  * - Simulated processing and order confirmation
  * - Orders saved to localStorage under "orders"
  */
+
 function Cart() {
   const { cart, dispatch } = useCart();
   const [coupon, setCoupon] = useState("");
@@ -15,6 +17,7 @@ function Cart() {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [processing, setProcessing] = useState(false);
   const [orderResult, setOrderResult] = useState(null);
+  const { requireAuth } = useAuth();
   const [cardForm, setCardForm] = useState({
     name: "",
     number: "",
@@ -46,12 +49,15 @@ function Cart() {
     }
   };
   const removeFromCart = (item) => {
+    if (!requireAuth("remove items from cart")) return;
     dispatch({ type: "REMOVE_FROM_CART", payload: item });
   };
   const increaseQty = (item) => {
+    if (!requireAuth("update cart items")) return;
     dispatch({ type: "INCREASE_QTY", payload: item });
   };
   const decreaseQty = (item) => {
+    if (!requireAuth("update cart items")) return;
     dispatch({ type: "DECREASE_QTY", payload: item });
   };
   const clearCart = () => {
@@ -66,6 +72,12 @@ function Cart() {
   // Simulate payment & create order
   const placeOrder = (e) => {
     e.preventDefault();
+    if (!requireAuth("place an order")) return;
+    if (cart.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+    
     if (cart.length === 0) return alert("Your cart is empty.");
     // For card payments, do a little validation
     if (paymentMethod === "card") {

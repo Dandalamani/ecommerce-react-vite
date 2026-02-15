@@ -4,6 +4,7 @@ import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
 import { useSwipeable } from "react-swipeable";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -99,7 +100,7 @@ function Home() {
       setCurrentSlide((p) => (p - 1 + slides.length) % slides.length),
     trackMouse: true,
   });
-
+  
   return (
     <div style={{ padding: "1rem", fontFamily: "Arial" }}>
       {/* ================= CAROUSEL ================= */}

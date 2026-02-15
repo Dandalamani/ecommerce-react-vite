@@ -207,3 +207,15 @@ button {
 .tooltip-wrapper:hover .tooltip-text {
   opacity: 1;
 }
+
+.main-content {
+  flex: 1;
+  margin-top: 80px;
+}
+
+/* 📱 Mobile fix */
+@media (max-width: 768px) {
+  .main-content {
+    margin-top: 4px;
+  }
+}
