@@ -9,7 +9,7 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const { dispatch } = useCart();
   const location = useLocation();
-  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API = import.meta.env.VITE_API_URL;
   const addToCart = (product) => {
     dispatch({ type: "ADD_TO_CART", payload: product });
   };
