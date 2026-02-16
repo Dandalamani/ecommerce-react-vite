@@ -9,7 +9,11 @@ router.get("/", async (req, res) => {
     let products = [];
 
     // 🔹 1. Try FakeStore first
-    const fakeRes = await axios.get("https://fakestoreapi.com/products");
+    const fakeRes = await axios.get("https://fakestoreapi.com/products", {
+  headers: {
+    "User-Agent": "Mozilla/5.0",
+  },
+});
 
     let filtered = fakeRes.data.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
@@ -29,8 +33,13 @@ router.get("/", async (req, res) => {
     // 🔥 2. If no results → use DummyJSON
     if (filtered.length === 0 && search) {
       const dummyRes = await axios.get(
-        `https://dummyjson.com/products/search?q=${search}`
-      );
+  `https://dummyjson.com/products/search?q=${search}`,
+  {
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+    },
+  }
+);
 
       // normalize data (IMPORTANT)
       products = dummyRes.data.products.map((item) => ({
