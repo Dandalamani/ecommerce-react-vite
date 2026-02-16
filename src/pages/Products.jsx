@@ -47,7 +47,7 @@ function Products() {
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard
-              key={product._id}
+              key={product.id}
               product={product}
               addToCart={addToCart}
             />

@@ -15,6 +15,17 @@ router.get("/", async (req, res) => {
       product.title.toLowerCase().includes(search.toLowerCase())
     );
 
+    if (!search) {
+      products = fakeRes.data.map((item) => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        description: item.description,
+        category: item.category,
+        image: item.image,
+      }));
+    }
+
     // 🔥 2. If no results → use DummyJSON
     if (filtered.length === 0 && search) {
       const dummyRes = await axios.get(
@@ -38,7 +49,7 @@ router.get("/", async (req, res) => {
 
   } catch (err) {
     console.error("🔥 ERROR:", err.message);
-    res.status(500).json({ message: "Server Error" });
+    res.json({ message: "Server Error" });
   }
 });
 
