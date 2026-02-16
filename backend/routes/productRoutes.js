@@ -3,45 +3,35 @@ const router = express.Router();
 const axios = require("axios");
 
 router.get("/", async (req, res) => {
+  const search = req.query.search || "";
+
+  let products = [];
+
+  // 🔹 FakeStore
   try {
-    const search = req.query.search || "";
-
-    let products = [];
-
-    // 🔹 1. Try FakeStore first
-    const fakeRes = await axios.get("https://fakestoreapi.com/products", {
-  headers: {
-    "User-Agent": "Mozilla/5.0",
-  },
-});
-
-    let filtered = fakeRes.data.filter((product) =>
-      product.title.toLowerCase().includes(search.toLowerCase())
+    const fakeRes = await axios.get(
+      "https://fakestoreapi.com/products",
+      { timeout: 7000 }
     );
 
-    if (!search) {
-      products = fakeRes.data.map((item) => ({
-        id: item.id,
-        title: item.title,
-        price: item.price,
-        description: item.description,
-        category: item.category,
-        image: item.image,
-      }));
-    }
+    products = fakeRes.data.filter((p) =>
+      p.title.toLowerCase().includes(search.toLowerCase())
+    );
 
-    // 🔥 2. If no results → use DummyJSON
-    if (filtered.length === 0 && search) {
-      const dummyRes = await axios.get(
-  `https://dummyjson.com/products/search?q=${search}`,
-  {
-    headers: {
-      "User-Agent": "Mozilla/5.0",
-    },
+    console.log("✅ FakeStore success");
+
+  } catch (err) {
+    console.log("❌ FakeStore failed:", err.message);
   }
-);
 
-      // normalize data (IMPORTANT)
+  // 🔹 DummyJSON fallback
+  if (products.length === 0) {
+    try {
+      const dummyRes = await axios.get(
+        `https://dummyjson.com/products/search?q=${search}`,
+        { timeout: 7000 }
+      );
+
       products = dummyRes.data.products.map((item) => ({
         id: item.id,
         title: item.title,
@@ -50,16 +40,16 @@ router.get("/", async (req, res) => {
         category: item.category,
         image: item.thumbnail,
       }));
-    } else {
-      products = filtered;
+
+      console.log("✅ DummyJSON success");
+
+    } catch (err) {
+      console.log("❌ DummyJSON failed:", err.message);
     }
-
-    res.json(products);
-
-  } catch (err) {
-    console.error("🔥 ERROR:", err.message);
-    res.json({ message: "Server Error" });
   }
+
+  // 🔥 ALWAYS RETURN ARRAY (NO ERROR)
+  res.json(products || []);
 });
 
 module.exports = router;

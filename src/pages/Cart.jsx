@@ -18,6 +18,7 @@ function Cart() {
   const [processing, setProcessing] = useState(false);
   const [orderResult, setOrderResult] = useState(null);
   const { requireAuth } = useAuth();
+  const userId = JSON.parse(localStorage.getItem("user"))?.user?.id;
   const [cardForm, setCardForm] = useState({
     name: "",
     number: "",
@@ -116,9 +117,9 @@ function Cart() {
         ? { brand: "VISA/MASTERCARD (simulated)", last4: cardForm.number.slice(-4) }
         : { info: paymentMethod === "upi" ? "UPI (simulated)" : "Cash on Delivery" };
       // Save order to localStorage
-      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+      const existingOrders = JSON.parse(localStorage.getItem(`orders_${userId}`) || "[]");
       existingOrders.unshift(order);
-      localStorage.setItem("orders", JSON.stringify(existingOrders));
+      localStorage.setItem(`orders_${userId}`, JSON.stringify([...existingOrders]));
       // Clear cart
       clearCart();
       setOrderResult(order);

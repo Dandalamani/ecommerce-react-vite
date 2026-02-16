@@ -21,7 +21,7 @@ if (!isAuthenticated) {
   const [cancelOrderId, setCancelOrderId] = useState(null);
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem(`orders_${user.user.id}`) || "[]");
+    const savedOrders = JSON.parse(localStorage.getItem(`orders_${user.id}`) || "[]");
     setOrders(savedOrders);
 
     return () => {

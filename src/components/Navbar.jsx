@@ -82,7 +82,7 @@ function Navbar() {
                   className="login-link"
                   style={{ display: "flex", alignItems: "center", gap: "6px", color: "white" }}
                 >
-                  <FaUser /> Hi, {user?.user?.name || "Profile"}
+                  <FaUser /> Hi, {user?.name || "Profile"}
                 </span>
               )}
 
@@ -155,7 +155,7 @@ function Navbar() {
                   to="/account"
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
                 >
-                  <FaUser /> Hi, {user?.user?.name || "Profile"}
+                  <FaUser /> Hi, {user?.name || "Profile"}
                 </Link>
               )}
 
