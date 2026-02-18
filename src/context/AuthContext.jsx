@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
   }
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-    toast.success("Logged in successfully ✅");
   };
 
   // ✅ LOGOUT
@@ -46,6 +45,19 @@ export const AuthProvider = ({ children }) => {
     }
     return true;
   };
+  const updateUser = (updatedData) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+
+      const updatedUser = {
+        ...prev,
+        ...updatedData,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -55,6 +67,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         requireAuth,
+        updateUser,
       }}
     >
       {children}

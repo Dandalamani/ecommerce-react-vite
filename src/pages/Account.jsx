@@ -1,22 +1,35 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+
 function Account() {
   // Load user from localStorage or set defaults
+  const { user: authUser, updateUser } = useAuth();
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("userProfile");
-    if (savedUser) return JSON.parse(savedUser);
-    const defaultUser = {
-      name: "John Doe",
-      email: "johndoe@example.com",
+    const savedProfile = localStorage.getItem("userProfile");
+    if (savedProfile) return JSON.parse(savedProfile);
+    return {
+      name: authUser?.name || "User",
+      email: authUser?.email || "",
       address: "Hyderabad, India",
       joined: "January 2024",
       avatar: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
     };
-    localStorage.setItem("userProfile", JSON.stringify(defaultUser));
-    return defaultUser;
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ ...user });
   // Save user to localStorage when updated
+  useEffect(() => {
+    if (authUser) {
+      setUser((prev) => ({
+        ...prev,
+        name: authUser.name,
+        email: authUser.email,
+      }));
+    }
+  }, [authUser]);
+
+  // ✅ Save to localStorage
   useEffect(() => {
     localStorage.setItem("userProfile", JSON.stringify(user));
   }, [user]);
@@ -25,8 +38,12 @@ function Account() {
   };
   const handleSave = () => {
     setUser(editForm);
+updateUser({
+  name: editForm.name,
+  email: editForm.email,
+});
     setIsEditing(false);
-    alert("✅ Profile updated successfully!");
+    toast.success("✅ Profile updated successfully!");
   };
   // ✅ Handle avatar upload (save base64 string)
   const handleAvatarUpload = (e) => {
@@ -40,6 +57,13 @@ function Account() {
     };
     reader.readAsDataURL(file);
   };
+  if (!authUser) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <h2>Please login to view your profile</h2>
+      </div>
+    );
+  }
   return (
     <div
       style={{

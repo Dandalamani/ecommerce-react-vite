@@ -50,6 +50,9 @@ function ProductCard({ product, addToCart }) {
 
       {/* PRICE */}
       <p className="product-price">₹{product.price}</p>
+      <p style={{ color: "green", fontSize: "12px" }}>
+      Free Delivery
+    </p>
 
       {/* ACTION BUTTONS */}
       <div className="product-actions">

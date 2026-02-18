@@ -103,6 +103,7 @@ function Home() {
   
   return (
     <div style={{ padding: "1rem", fontFamily: "Arial" }}>
+      
       {/* ================= CAROUSEL ================= */}
       {imagesReady && (
         <section

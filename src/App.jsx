@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -37,6 +38,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>
 
