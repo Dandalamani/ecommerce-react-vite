@@ -102,7 +102,7 @@ button:focus-visible {
   padding: 10px;
   background: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 9px;
   margin: 10px 0;
 }
 /* Left section: image + text */
@@ -421,7 +421,7 @@ button:focus-visible {
 }
 
 .cancel-actions .yes {
-  background: #d30808;
+  background: #444444;
   color: #fff;
 }
 
@@ -460,7 +460,7 @@ button:focus-visible {
 
   /* Placeholder visibility */
   input::placeholder {
-    color: #020000;                      /* ✅ darker placeholder */
+    color: #010000;                      /* ✅ darker placeholder */
     opacity: 1;                       /* Safari fix */
   }
   form input {
@@ -485,8 +485,8 @@ button:focus-visible {
   }
   input {
     color: #000000 !important;        /* ✅ typed text black */
-    caret-color: #000000;             /* ✅ cursor black */
-    background-color: #ffffff;        /* keep white */
+    caret-color: #0a0000;             /* ✅ cursor black */
+    background-color: #ffffff; /* keep white */
   }
 
   input::placeholder {

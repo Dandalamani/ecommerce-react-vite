@@ -4,9 +4,8 @@ const axios = require("axios");
 
 router.get("/", async (req, res) => {
   const search = req.query.search || "";
-
+  const keyword = search.toLowerCase().trim();
   let products = [];
-
   // 🔹 FakeStore
   try {
     const fakeRes = await axios.get(
@@ -14,9 +13,15 @@ router.get("/", async (req, res) => {
       { timeout: 7000 }
     );
 
-    products = fakeRes.data.filter((p) =>
-      p.title.toLowerCase().includes(search.toLowerCase())
-    );
+    if (!keyword) {
+      products = fakeRes.data;
+    } else {
+      const regex = new RegExp(keyword, "i");
+
+      products = fakeRes.data.filter((p) =>
+        regex.test(p.title)
+      );
+    }
 
     console.log("✅ FakeStore success");
 
@@ -28,7 +33,7 @@ router.get("/", async (req, res) => {
   if (products.length === 0) {
     try {
       const dummyRes = await axios.get(
-        `https://dummyjson.com/products/search?q=${search}`,
+        `https://dummyjson.com/products/search?q=${encodeURIComponent(keyword)}`,
         { timeout: 7000 }
       );
 

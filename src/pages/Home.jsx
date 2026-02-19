@@ -43,6 +43,11 @@ function Home() {
     },
   ];
 
+  useEffect(() => {
+  fetch("http://localhost:5000/api/products")
+    .then(() => console.log("🔥 Backend warmed up"));
+}, []);
+
   /* ================= IMAGE PRELOAD (ORDERED) ================= */
   useEffect(() => {
     const preloadImages = async () => {

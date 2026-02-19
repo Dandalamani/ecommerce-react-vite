@@ -33,6 +33,7 @@
 /* SEARCH INPUT */
 .search-input {
   width: 100%;
+  color: black;
   flex: 1;
   min-width: 220px;
   max-width: 620px;
@@ -40,6 +41,7 @@
   border-radius: 9px;
   border: none;
   outline: none;
+  caret-color: black;     
   background: white;
   box-sizing: border-box;
 }
@@ -286,4 +288,12 @@
 
 .category-bar span:hover {
   color: #2874f0;
+}
+.user-name {
+  max-width: 60px;        /* FIXED WIDTH */
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }

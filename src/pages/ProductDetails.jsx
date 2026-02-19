@@ -2,22 +2,33 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { cart, dispatch } = useCart(); // ✅ get cart + dispatch
   const { requireAuth } = useAuth();
+  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
   useEffect(() => {
-    fetch(`https://fakestoreapi.com/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data);
-        setLoading(false);
+  setLoading(true);
+  axios.get(`${API}/api/products`)
+    .then(res => {
+      console.log("ALL PRODUCTS:", res.data);
+      const found = res.data.find((p) => String(p.id) === String(id));
+      if (found) {
+          setProduct(found);
+        } else {
+          console.error("❌ Product not found");
+        }
+    })
+    .catch((err) => {
+        console.error("ERROR:", err);
       })
-      .catch((err) => {console.error(err);
-      setLoading(false);});
-  }, [id]);
+      .finally(() => {
+        setLoading(false); // ✅ ALWAYS STOP LOADING
+      });
+}, [id,API]);
 
   const isInCart = cart.some((item) => item.id === product?.id);
   const addToCart = () => {

@@ -2,13 +2,6 @@ import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
-/**
- * Updated Cart page with:
- * - Subtotal, discounts, coupon, shipping, tax
- * - Fake payment UI (Card / UPI / COD)
- * - Simulated processing and order confirmation
- * - Orders saved to localStorage under "orders"
- */
 
 function Cart() {
   const { cart, dispatch } = useCart();
@@ -18,12 +11,14 @@ function Cart() {
   const [processing, setProcessing] = useState(false);
   const [orderResult, setOrderResult] = useState(null);
   const { requireAuth } = useAuth();
-  const userId = JSON.parse(localStorage.getItem("user"))?.user?.id;
+  const userId = JSON.parse(localStorage.getItem("user"))?.email;
+
   const [cardForm, setCardForm] = useState({
     name: "",
     number: "",
     expiry: "",
     cvv: "",
+    upi: "",
   });
   // Basic calculations
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -79,7 +74,6 @@ function Cart() {
       return;
     }
     
-    if (cart.length === 0) return alert("Your cart is empty.");
     // For card payments, do a little validation
     if (paymentMethod === "card") {
       const { name, number, expiry, cvv } = cardForm;
@@ -92,6 +86,13 @@ function Cart() {
         return;
       }
     }
+    // ✅ UPI VALIDATION
+if (paymentMethod === "upi") {
+  if (!cardForm.upi || !cardForm.upi.includes("@")) {
+    toast.error("Please enter a valid UPI ID (e.g. name@upi)");
+    return;
+  }
+}
     // Build order object
     const order = {
       id: "ORD" + Date.now(),
@@ -215,7 +216,7 @@ function Cart() {
                 </div>
                 {/* Fake payment UI */}
                 {paymentMethod === "card" && (
-                  <form onSubmit={placeOrder} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "9px" }}>
+                  <form onSubmit={placeOrder} style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "9px",maxWidth: "100%", }}>
                     <input name="name" value={cardForm.name} onChange={handleCardChange} placeholder="Name on card" style={inputSmallStyle} />
                     <input name="number" value={cardForm.number} onChange={handleCardChange} placeholder="Card number (digits only)" style={inputSmallStyle} />
                     <div style={{ display: "flex", gap: "9px" }}>
@@ -229,7 +230,7 @@ function Cart() {
                 )}
                 {paymentMethod === "upi" && (
                   <div style={{ marginTop: "1rem" }}>
-                    <p>Scan the QR or enter UPI ID in your app (simulated).</p>
+                    <input name="UPI" value={cardForm.upi} onChange={handleCardChange} placeholder="Enter UPI ID" style={inputSmallStyle} />
                     <button onClick={placeOrder} disabled={processing} style={payButtonStyle}>
                       {processing ? "Processing..." : `Pay ${fmt(total)} via UPI`}
                     </button>
@@ -311,10 +312,13 @@ const radioLabelStyle = {
   gap: "6px",
 };
 const inputSmallStyle = {
-  padding: "8px",
+  padding: "10px",
   borderRadius: "6px",
   border: "1px solid #ccc",
   width: "100%",
+  boxSizing: "border-box",
+  maxWidth: "340px",
+  margin: "0 auto"
 };
 const payButtonStyle = {
   marginTop: "8px",
@@ -325,5 +329,6 @@ const payButtonStyle = {
   borderRadius: "6px",
   cursor: "pointer",
   width: "100%",
+  boxSizing: "border-box",
 };
 export default Cart;

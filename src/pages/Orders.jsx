@@ -6,11 +6,9 @@ import { Navigate } from "react-router-dom";
 const lockScroll = () => {
   document.body.style.overflow = "hidden";
 };
-
 const unlockScroll = () => {
   document.body.style.overflow = "";
 };
-
 function Orders() {
   const [orders, setOrders] = useState([]);
   const { user, isAuthenticated } = useAuth();
@@ -21,9 +19,10 @@ if (!isAuthenticated) {
   const [cancelOrderId, setCancelOrderId] = useState(null);
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem(`orders_${user.id}`) || "[]");
+    const user = JSON.parse(localStorage.getItem("user"));
+const userId = user?.email;
+const savedOrders  = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
     setOrders(savedOrders);
-
     return () => {
       unlockScroll();
     };
@@ -157,9 +156,35 @@ if (!isAuthenticated) {
 
       {/* ================= CANCEL CONFIRM MODAL ================= */}
       {cancelOrderId && (
-        <div className="cancel-overlay">
-          <div className="cancel-modal">
-            <strong>Are you sure you want to cancel this order?</strong>
+        <div
+          className="cancel-overlay"
+          onClick={() => {
+            setCancelOrderId(null);
+            unlockScroll();
+          }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+        >
+          <div
+            className="cancel-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              textAlign: "center",
+              minWidth: "300px",
+            }}
+          >
+
+            <strong>Are you sure, you want to cancel this order?</strong>
 
             <div className="cancel-actions">
               <button
@@ -170,15 +195,20 @@ if (!isAuthenticated) {
                       ? { ...o, status: "cancelled" }
                       : o
                   );
-
                   setOrders(updatedOrders);
-                  localStorage.setItem(
-  `orders_${user.user.id}`,
-  JSON.stringify(updatedOrders)
-);
+                  const userData = JSON.parse(localStorage.getItem("user"));
+                  const userId = userData?.email;
 
-                  setCancelOrderId(null);
-                  unlockScroll();
+                  localStorage.setItem(
+                    `orders_${userId}`,
+                    JSON.stringify(updatedOrders)
+                  );
+
+                  // ✅ FIX: CLOSE MODAL PROPERLY
+                  setTimeout(() => {
+                    setCancelOrderId(null);
+                    unlockScroll();
+                  }, 0);
 
                   toast.success("Order cancelled successfully", {
                     position: "bottom-center",

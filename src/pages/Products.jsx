@@ -41,8 +41,12 @@ function Products() {
         </p>
       )}
       {loading ? (
-        <p style={{ textAlign: "center" }}>Loading products...</p>
-      ) : (
+  <div className="skeleton-grid">
+    {Array(8).fill().map((_, i) => (
+      <div key={i} className="skeleton-card"></div>
+    ))}
+  </div>
+) : (
 
       <div className="product-grid">
         {products.length > 0 ? (
