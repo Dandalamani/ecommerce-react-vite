@@ -8,7 +8,10 @@ import { useAuth } from "../context/AuthContext";
 function ProductCard({ product, addToCart }) {
   const { wishlist, dispatchWishlist } = useWishlist();
   const { cart } = useCart(); // 👈 cart state
-  const isInWishlist = wishlist.some((item) => item.id === product.id);
+  const { isAuthenticated } = useAuth();
+const isInWishlist =
+  isAuthenticated &&
+  wishlist.some((item) => item.id === product.id);
   const isInCart = cart.some((item) => item.id === product.id); // 👈 check cart
   const { requireAuth } = useAuth();
 
@@ -76,7 +79,11 @@ function ProductCard({ product, addToCart }) {
           onClick={toggleWishlist}
           className={`btn-wishlist ${isInWishlist ? "remove" : ""}`}
         >
-          {isInWishlist ? "Remove" : "Wishlist"}
+          {!isAuthenticated
+    ? "Wishlist"
+    : isInWishlist
+    ? "Remove"
+    : "Wishlist"}
         </button>
       </div>
     </div>
