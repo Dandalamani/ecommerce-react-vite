@@ -134,7 +134,7 @@ function ProductDetails() {
         </div>
       </div>
 
-    </div>
+    </div> 
   );
 }
 
